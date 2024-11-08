@@ -20,7 +20,7 @@ public class ServiciosProveedor {
 	@Path("buscar/{nombreParam}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response obtenerClientes(@PathParam ("nombreParam") String nombre){
+	public Response obtenerProveedores(@PathParam ("nombreParam") String nombre){
 		ProveedorBDD prov = new ProveedorBDD();
 		ArrayList<Proveedor> proveedores = null;
 		try {

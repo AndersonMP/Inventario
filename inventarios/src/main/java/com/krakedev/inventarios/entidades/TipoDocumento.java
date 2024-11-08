@@ -14,6 +14,7 @@ public class TipoDocumento {
 		this.descripcion = descripcion;
 	}
 	
+	// Sí solo necesito el código
 	public TipoDocumento(String codigo) {
 		super();
 		this.codigo = codigo;
