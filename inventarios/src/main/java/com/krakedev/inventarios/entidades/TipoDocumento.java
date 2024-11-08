@@ -13,6 +13,11 @@ public class TipoDocumento {
 		this.codigo = codigo;
 		this.descripcion = descripcion;
 	}
+	
+	public TipoDocumento(String codigo) {
+		super();
+		this.codigo = codigo;
+	}
 
 	public String getCodigo() {
 		return codigo;
