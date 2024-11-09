@@ -74,4 +74,46 @@ public class PedidoBDD {
 			}
 		}
 	}
+
+	public void recibir(CabeceraPedido cabPedido) throws KrakedevExceptions {
+		Connection con = null;
+		PreparedStatement ps = null;
+		PreparedStatement psDet = null;
+		try {
+			con = ConexionBDD.obtenerConexion();
+			ps = con.prepareStatement("update cabecera_pedido set estado = ? " + "where cod_cab_ped = ?;",
+					Statement.RETURN_GENERATED_KEYS);
+
+			ps.setString(1, cabPedido.getEstado().getCodigo());
+			ps.setInt(2, cabPedido.getCodCabPedido());
+
+			ps.executeUpdate();
+			ArrayList<DetallePedido> detallesPedido = cabPedido.getDetalles();
+			DetallePedido det;
+			for (int i = 0; i < detallesPedido.size(); i++) {
+				det = detallesPedido.get(i);
+				psDet = con.prepareStatement(
+						"update detalle_pedido " + "set cantidad_recibida = ? " + "where cod_det_ped = ?;");
+				psDet.setInt(1, det.getCantidadRecibida());
+				psDet.setInt(2, det.getCodDetPedido());
+
+				psDet.executeUpdate();
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new KrakedevExceptions("Error al recibir pedido");
+		} catch (KrakedevExceptions e) {
+			throw e;
+		} finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new KrakedevExceptions("Error al recibir: " + e.getMessage());
+			}
+		}
+	}
 }
