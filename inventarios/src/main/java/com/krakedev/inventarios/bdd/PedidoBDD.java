@@ -6,11 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
 import com.krakedev.inventarios.entidades.CabeceraPedido;
 import com.krakedev.inventarios.entidades.DetallePedido;
+import com.krakedev.inventarios.entidades.HistorialStock;
+import com.krakedev.inventarios.entidades.Producto;
 import com.krakedev.inventarios.excepciones.KrakedevExceptions;
 import com.krakedev.inventarios.utils.ConexionBDD;
 
@@ -79,6 +82,9 @@ public class PedidoBDD {
 		Connection con = null;
 		PreparedStatement ps = null;
 		PreparedStatement psDet = null;
+		PreparedStatement psHis = null;
+		Date fechaActual = new Date();
+		Timestamp fechaHoraActual = new Timestamp(fechaActual.getTime());
 		try {
 			con = ConexionBDD.obtenerConexion();
 			ps = con.prepareStatement("update cabecera_pedido set estado = ? " + "where cod_cab_ped = ?;",
@@ -89,7 +95,9 @@ public class PedidoBDD {
 
 			ps.executeUpdate();
 			ArrayList<DetallePedido> detallesPedido = cabPedido.getDetalles();
+			Producto prod;
 			DetallePedido det;
+			HistorialStock his = new HistorialStock();
 			for (int i = 0; i < detallesPedido.size(); i++) {
 				det = detallesPedido.get(i);
 				psDet = con.prepareStatement(
@@ -98,6 +106,24 @@ public class PedidoBDD {
 				psDet.setInt(2, det.getCodDetPedido());
 
 				psDet.executeUpdate();
+				
+				psHis = con.prepareStatement(
+						"insert into historial_stock (producto, fecha,referencia,cantidad)" + "values (?,?,?, ?);");
+				prod = new Producto(det.getCodProducto().getCodProducto());
+				psHis.setInt(1, prod.getCodProducto());
+				psHis.setTimestamp(2, fechaHoraActual);
+				String referencia = null;
+				if (det.getCantidadRecibida() > 0) {
+					referencia = "Pedido " + prod.getCodProducto();
+				} else if (det.getCantidadRecibida() < 0) {
+					referencia = "Venta " + prod.getCodProducto();
+				} else {
+					referencia = his.getReferencia() + " " + prod.getCodProducto();
+				}
+				psHis.setString(3, referencia);
+				psHis.setInt(4, det.getCantidadRecibida());
+
+				psHis.executeUpdate();
 			}
 
 		} catch (SQLException e) {
@@ -108,7 +134,14 @@ public class PedidoBDD {
 			throw e;
 		} finally {
 			try {
-				con.close();
+				if (ps != null)
+					ps.close();
+				if (psDet != null)
+					psDet.close();
+				if (psHis != null)
+					psHis.close();
+				if (con != null)
+					con.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

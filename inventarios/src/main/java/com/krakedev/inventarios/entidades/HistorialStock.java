@@ -24,6 +24,16 @@ public class HistorialStock {
 		this.codHistorial = codHistorial;
 	}
 
+	public HistorialStock(Producto codProducto, String referencia) {
+		super();
+		this.codProducto = codProducto;
+		this.referencia = referencia;
+	}
+	public HistorialStock(String referencia) {
+		super();
+		this.referencia = referencia;
+	}
+
 	public HistorialStock(int codHistorial, Producto codProducto, Timestamp fecha, String referencia, int cantidad) {
 		super();
 		this.codHistorial = codHistorial;
