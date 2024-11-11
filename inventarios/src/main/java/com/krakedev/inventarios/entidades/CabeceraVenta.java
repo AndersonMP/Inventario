@@ -2,6 +2,7 @@ package com.krakedev.inventarios.entidades;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class CabeceraVenta {
 
@@ -10,18 +11,21 @@ public class CabeceraVenta {
 	private BigDecimal totalSinIva;
 	private BigDecimal iva;
 	private BigDecimal total;
+	private ArrayList<DetalleVenta> detalles;
 
 	public CabeceraVenta() {
 		super();
 	}
 
-	public CabeceraVenta(int codCabVenta, Timestamp fecha, BigDecimal totalSinIva, BigDecimal iva, BigDecimal total) {
+	public CabeceraVenta(int codCabVenta, Timestamp fecha, BigDecimal totalSinIva, BigDecimal iva, BigDecimal total,
+			ArrayList<DetalleVenta> detalles) {
 		super();
 		this.codCabVenta = codCabVenta;
 		this.fecha = fecha;
 		this.totalSinIva = totalSinIva;
 		this.iva = iva;
 		this.total = total;
+		this.detalles = detalles;
 	}
 
 	public int getCodCabVenta() {
@@ -64,10 +68,18 @@ public class CabeceraVenta {
 		this.total = total;
 	}
 
+	public ArrayList<DetalleVenta> getDetalles() {
+		return detalles;
+	}
+
+	public void setDetalles(ArrayList<DetalleVenta> detalles) {
+		this.detalles = detalles;
+	}
+
 	@Override
 	public String toString() {
 		return "CabeceraVenta [codCabVenta=" + codCabVenta + ", fecha=" + fecha + ", totalSinIva=" + totalSinIva
-				+ ", iva=" + iva + ", total=" + total + "]";
+				+ ", iva=" + iva + ", total=" + total + ", detalles=" + detalles + "]";
 	}
 
 }

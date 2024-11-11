@@ -12,8 +12,18 @@ public class Producto {
 	private Boolean tieneIva;
 	private int Stock;
 
+	public Producto() {
+
+	}
+
 	public Producto(int codProducto) {
 		this.codProducto = codProducto;
+	}
+
+	public Producto(int codProducto, BigDecimal precioVenta, boolean tieneIva) {
+		this.codProducto = codProducto;
+		this.precioVenta = precioVenta;
+		this.tieneIva = tieneIva;
 	}
 
 	public Producto(int codProducto, UnidadMedida codUDM, Categoria categoria, String nombre, BigDecimal precioVenta,
